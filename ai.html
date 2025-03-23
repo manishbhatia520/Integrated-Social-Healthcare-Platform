@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arogya Sathi | Integrated Social Health Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chat-container {
+            height: 60vh;
+            overflow-y: auto;
+        }
+
+        .user-message {
+            background-color: #E3F2FD;
+            border-radius: 18px 18px 0 18px;
+        }
+
+        .bot-message {
+            background-color: #F1F1F1;
+            border-radius: 18px 18px 18px 0;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .health-tip {
+            background-color: #E8F5E9;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .emergency-btn {
+            background-color: #FF5252;
+        }
+
+        .emergency-btn:hover {
+            background-color: #FF1744;
+        }
+
+        .feature-card {
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-access {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .icon-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .voice-commands {
+            background-color: #FFF8E1;
+            border-left: 4px solid #FFC107;
+        }
+
+        .visual-aid-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+        }
+
+        .high-contrast-mode {
+            filter: contrast(150%);
+        }
+
+        .prediction-alert {
+            background-color: #FFEBEE;
+            border-left: 4px solid #F44336;
+            padding: 1rem;
+            margin: 1rem 0;
+            animation: flash 2s infinite;
+        }
+
+        @keyframes flash {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .tollfree-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: red;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tollfree-banner i {
+            margin-right: 0.5rem;
+        }
+
+        /* Make the toll-free number text bigger and more prominent */
+        .tollfree-number {
+            font-size: 2.5rem;
+        }
+
+        /* Improve hover state for the WhatsApp link */
+        .whatsapp-link:hover {
+            background-color: #128C7E !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center">
+                <i class="fas fa-heartbeat text-2xl mr-2"></i>
+                <span class="text-xl font-bold">Arogya Sathi</span>
+            </a>
+            <div class="language-selector">
+                <select id="language" class="bg-white text-gray-800 px-3 py-1 rounded">
+                    <option value="mr">मराठी (Marathi)</option>
+                    <option value="en" selected>English</option>
+                    <option value="hi">हिंदी (Hindi)</option>
+                    <option value="gu">ગુજરાતી (Gujarati)</option>
+                    <option value="ta">தமிழ் (Tamil)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
+                </select>
+            </div>
+            <div class="hidden md:flex space-x-4">
+                <a href="doctor.html" class="hover:text-blue-200">Doctor</a>
+                <a href="patient.html" class="hover:text-blue-200">Patient</a>
+                <a href="ambulance.html" class="hover:text-blue-200">Ambulance</a>
+                <a href="society.html" class="hover:text-blue-200">Society</a>
+                <a href="government.html" class="hover:text-blue-200">Government Schemes</a>
+                <a href="ai.html" class="bg-white text-blue-600 px-3 py-1 rounded">Arogya Sathi</a>
+            </div>
+            <button class="md:hidden text-white">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Accessibility Controls -->
+    <div class="bg-blue-100 p-2 border-b border-blue-200">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <button id="text-size-increase" class="bg-white p-2 rounded mr-2 text-blue-600">
+                    <i class="fas fa-text-height"></i> Increase Text Size
+                </button>
+                <button id="high-contrast" class="bg-white p-2 rounded mr-2 text-blue-600">
+                    <i class="fas fa-adjust"></i> High Contrast
+                </button>
+                <button id="read-aloud" class="bg-white p-2 rounded text-blue-600">
+                    <i class="fas fa-volume-up"></i> Read Aloud
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto p-4">
+        <div class="flex flex-wrap">
+            <!-- Main Chat Interface -->
+            <div class="w-full lg:w-2/3 p-4">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Arogya Sathi</h2>
+                        <div class="flex">
+                            <button id="voice-btn" class="bg-blue-500 text-white px-4 py-2 rounded-full flex items-center mr-2">
+                                <i class="fas fa-microphone mr-2"></i>
+                                <span>User Speak</span>
+                            </button>
+                            <button id="ai-speak-btn" class="bg-purple-500 text-white px-4 py-2 rounded-full flex items-center mr-2">
+                                <i class="fas fa-volume-up mr-2"></i>
+                                <span>AI Speak</span>
+                            </button>
+                            <button id="image-upload" class="bg-green-500 text-white px-4 py-2 rounded-full flex items-center">
+                                <i class="fas fa-camera mr-2"></i>
+                                <span>Photo</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Voice command helper for uneducated users -->
+                    <div class="voice-commands p-3 mb-4 rounded">
+                        <h4 class="font-bold text-amber-800 flex items-center">
+                            <i class="fas fa-bullhorn mr-2"></i> Voice Commands
+                        </h4>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                            <div class="text-sm text-gray-700">Say: "Connect me to a doctor"</div>
+                            <div class="text-sm text-gray-700">Say: "Send an ambulance"</div>
+                            <div class="text-sm text-gray-700">Say: "I have a fever"</div>
+                        </div>
+                    </div>
+
+                    <div id="chat-container" class="chat-container mb-4 p-2">
+                        <div class="bot-message p-3 mb-3 max-w-3/4">
+                            <p>Hello! I am your Arogya Sathi. How can I help you?</p>
+                            <div class="mt-2 grid grid-cols-2 gap-2">
+                                <button class="quick-option bg-blue-50 hover:bg-blue-100 p-2 rounded text-left text-blue-700 flex items-center">
+                                    <i class="fas fa-thermometer-half mr-2"></i> I have a fever
+                                </button>
+                                <button class="quick-option bg-blue-50 hover:bg-blue-100 p-2 rounded text-left text-blue-700 flex items-center">
+                                    <i class="fas fa-head-side-cough mr-2"></i> I have a cough
+                                </button>
+                                <button class="quick-option bg-blue-50 hover:bg-blue-100 p-2 rounded text-left text-blue-700 flex items-center">
+                                    <i class="fas fa-baby mr-2"></i> Child Health
+                                </button>
+                                <button class="quick-option bg-blue-50 hover:bg-blue-100 p-2 rounded text-left text-blue-700 flex items-center">
+                                    <i class="fas fa-pills mr-2"></i> My Medicines
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="text" id="user-input" class="flex-grow border rounded-l-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type your health issue here...">
+                        <button id="send-btn" class="bg-blue-600 text-white p-3 rounded-r-lg hover:bg-blue-700 focus:outline-none">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+               <!-- Body Removed - Replaced with AI Tips -->
+<div class="bg-white rounded-lg shadow-lg p-6 mt-4">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">AI Healthcare Tips</h3>
+    <div id="ai-healthcare-tips" class="text-gray-700">
+       Loading tips...
+        </div>
+</div>
+
+                <!-- Emergency Section -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mt-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Emergency Help</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button id="emergency-ambulance" class="emergency-btn text-white p-4 rounded-lg flex items-center justify-center pulse">
+                            <i class="fas fa-ambulance text-2xl mr-2"></i>
+                            <span class="text-lg font-bold">Call Ambulance</span>
+                        </button>
+                         <a href="tel:1800-123-4567" class="bg-orange-500 text-white p-4 rounded-lg flex items-center justify-center hover:bg-orange-600">
+                            <i class="fas fa-phone-alt text-2xl mr-2"></i>
+                            <span class="text-lg font-bold">Call Toll-Free: <span class="tollfree-number">1800-123-4567</span></span>
+                        </a>
+                          <a href="https://api.whatsapp.com/send/?phone=919209949457&text=%E0%A4%B5%E0%A4%BF%E0%A4%B5%E0%A4%BF%E0%A4%A7+%E0%A4%AF%E0%A5%8B%E0%A4%9C%E0%A4%A8%E0%A4%BE%E0%A4%82%E0%A4%9A%E0%A5%80+%E0%A4%AE%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%A4%E0%A5%80+%E0%A4%AE%E0%A4%BF%E0%A4%B3%E0%A4%B5%E0%A4%BF%E0%A4%A3%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%B8%E0%A4%BE%E0%A4%A0%E0%A5%80+%E0%A4%86%E0%A4%AE%E0%A4%9A%E0%A4%BE+9209949457+%E0%A4%B9%E0%A4%BE+%E0%A4%A8%E0%A4%82%E0%A4%AC%E0%A4%B0+%E0%A4%B8%E0%A5%87%E0%A4%B5%E0%A5%8D%E0%A4%B9+%E0%A4%95%E0%A4%B0%E0%A4%BE.+%E0%A4%9C%E0%A4%B0+%E0%A4%86%E0%A4%AE%E0%A4%9A%E0%A4%BE+%E0%A4%A8%E0%A4%82%E0%A4%AC%E0%A4%B0+%E0%A4%A4%E0%A5%81%E0%A4%AE%E0%A4%9A%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%95%E0%A4%A1%E0%A5%87+%E0%A4%B8%E0%A5%87%E0%A4%B5%E0%A5%8D%E0%A4%B9+%E0%A4%A8%E0%A4%B8%E0%A5%87%E0%A4%B2+%E0%A4%A4%E0%A4%B0+%E0%A4%86%E0%A4%AE%E0%A5%8D%E0%A4%B9%E0%A5%80+%E0%A4%A4%E0%A5%81%E0%A4%AE%E0%A5%8D%E0%A4%B9%E0%A4%BE%E0%A4%B2%E0%A4%BE+%E0%A4%AA%E0%A4%BE%E0%A4%A0%E0%A4%B5%E0%A4%BF%E0%A4%B2%E0%A5%87%E0%A4%B2%E0%A5%80+%E0%A4%AE%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%A4%E0%A5%80+%E0%A4%A6%E0%A4%BF%E0%A4%B8%E0%A4%A3%E0%A4%BE%E0%A4%B0%E0%A4%9A+%E0%A4%A8%E0%A4%BE%E0%A4%B9%E0%A5%80.+%E0%A4%A4%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%AE%E0%A5%81%E0%A4%B3%E0%A5%87+%E0%A4%AE%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%A4%E0%A5%80+%E0%A4%B9%E0%A4%B5%E0%A5%80+%E0%A4%85%E0%A4%B8%E0%A5%87%E0%A4%B2+%E0%A4%A4%E0%A4%B0+%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE+%E0%A4%A8%E0%A4%82%E0%A4%AC%E0%A4%B0+%E0%A4%B8%E0%A5%87%E0%A4%B5%E0%A5%8D%E0%A4%B9+%E0%A4%95%E0%A4%B0%E0%A4%BE.&type=phone_number&app_absent=0" class="whatsapp-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+                            <i class="fab fa-whatsapp text-2xl mr-2"></i>
+                            <span class="text-lg font-bold">WhatsApp Us</span>
+                        </a>
+                        <button id="connect-doctor" class="bg-blue-500 text-white p-4 rounded-lg flex items-center justify-center hover:bg-blue-600">
+                            <i class="fas fa-user-md text-2xl mr-2"></i>
+                            <span class="text-lg font-bold">Connect to Doctor</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="w-full lg:w-1/3 p-4">
+                <!-- Health Prediction Alert -->
+                <div id="prediction-container" class="prediction-alert rounded mb-4" style="display: none;">
+                    <h4 class="font-bold text-red-800">Health Alert</h4>
+                    <p id="prediction-text" class="text-gray-800"></p>
+                    <button class="mt-2 bg-red-600 text-white px-4 py-2 rounded-lg">Take Action Now</button>
+                </div>
+
+                <!-- Health Tips Section -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Today's Health Tip</h3>
+                    <div class="health-tip p-4 rounded">
+                        <h4 class="font-bold text-green-800">Drink Plenty of Water</h4>
+                        <p class="text-gray-700">Drink at least 8 glasses of water daily to maintain proper body functions and avoid dehydration.</p>
+                    </div>
+                </div>
+
+                <!-- Nearest Healthcare -->
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Nearest Healthcare Center</h3>
+                    <div class="mb-2 flex items-center justify-between">
+                        <input type="text" id="pincode-input" placeholder="Enter your pincode" class="border p-2 rounded w-2/3">
+                        <button id="find-healthcare" class="bg-blue-500 text-white px-3 py-2 rounded">Find</button>
+                    </div>
+                    <div id="healthcare-results" class="mt-3">
+                        <!-- Healthcare results will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white text-center p-4 mt-8">
+        &copy; 2024 Arogya Sathi. All rights reserved.
+    </footer>
+
+    <div class="tollfree-banner">
+        <i class="fas fa-phone-alt"></i> Need immediate assistance? Call us at <a href="tel:1800-123-4567" style="color: white; text-decoration: underline;"><span class="tollfree-number">1800-123-4567</span></a>
+    </div>
+
+    <!-- Quick Access Floating Buttons -->
+    <div class="quick-access">
+        <a href="#" class="icon-btn bg-blue-500 text-white">
+            <i class="fas fa-question-circle"></i>
+        </a>
+        <a href="#" class="icon-btn bg-green-500 text-white">
+            <i class="fas fa-medkit"></i>
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatContainer = document.getElementById('chat-container');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const languageSelector = document.getElementById('language');
+            const predictionContainer = document.getElementById('prediction-container');
+            const predictionText = document.getElementById('prediction-text');
+            const emergencyAmbulanceBtn = document.getElementById('emergency-ambulance');
+ const tollFreeHelpBtn = document.getElementById('toll-free-help');
+            const connectDoctorBtn = document.getElementById('connect-doctor');
+            const findHealthcareBtn = document.getElementById('find-healthcare');
+            const pincodeInput = document.getElementById('pincode-input');
+            const healthcareResults = document.getElementById('healthcare-results');
+            const textSizeIncreaseBtn = document.getElementById('text-size-increase');
+            const highContrastBtn = document.getElementById('high-contrast');
+            const readAloudBtn = document.getElementById('read-aloud');
+            const voiceBtn = document.getElementById('voice-btn');
+            const imageUploadBtn = document.getElementById('image-upload');
+            const quickOptions = document.querySelectorAll('.quick-option');
+            const symptomItems = document.querySelectorAll('.symptom-item');
+            const aiSpeakBtn = document.getElementById('ai-speak-btn');
+            const synth = window.speechSynthesis;
+            const aiHealthcareTipsDiv = document.getElementById('ai-healthcare-tips');
+         const ambulanceDetails = {
+            "400001": ["Ambulance Service 1: 98XXXXXXXX", "Ambulance Service 2: 99XXXXXXXX"],
+            "411001": ["Ambulance Service A: 88XXXXXXXX", "Ambulance Service B: 77XXXXXXXX"],
+                };
+          const doctorDetails = {
+            "general": ["Dr. Smith: Specialization: General Medicine; Contact: 91XXXXXXXX", "Dr. Jones: Specialization: Family Medicine; Contact: 92XXXXXXXX"],
+            "cardiologist": ["Dr. Heart: Specialization: Cardiology; Contact: 93XXXXXXXX", "Dr. Artery: Specialization: Cardiology; Contact: 94XXXXXXXX"]
+                 };
+
+            const englishHealthTips = [
+           "jevan kara jevan kara jevan kara ",
+           "jevan kara jevan kara jevan kara ",
+             
+            "Doctor la Call / Whatsapp Karna sathi doctor cha  no mi khali no dila ahe  Doctor la Call / Whatsapp Karna sathi doctor no mi khali dila ahe",
+            
+        
+            "  City Madla Pradhusan talnaaya sathi Mask gala ",
+             "Paaanni piya kimman   paach litre Paaanni piya kimman   paach litre   ",
+             "Adhik Mahiti sathi TollFree no var Phone kara ",
+
+             
+            
+            "Paaanni piya kimman   paach litre Paaanni piya kimman   paach litre   ",
+            
+            " SharatLa Madla Pradhusan talnaaya sathi Mask   gala ",
+            
+            "Adhik Mahiti sathi TollFree no var Phone kara Adhik Mahiti sathi TollFree no var Phone kara",
+        
+            "WhatsApp Channel Join Kara mi Khali Link dileye ahe tumhala WhatsApp Channel Join Kara mi  khali link dileye ahe tumhala ",
+
+
+
+            
+            "Adhik Mahiti sathi TollFree no var Phone kara  Adhik Mahiti sathi TollFree no var Phone ",
+            
+            "WhatsApp Channel Join Kara mi dileye ahe tumhala WhatsApp Channel Join Kara mi  khali link dileye ahe tumhala ",
+
+           "jevan kara jevan kara jevan kara ",
+           
+
+            
+           
+            "Tension  geu nakaa Tension geu nakaa ",
+            
+            " Vyaam Kara ekk Taas vyaam Kara ekk taas",
+            
+            "Panni pya kimman   paach litre  ",
+
+            
+           "Adhik Mahiti sathi TollFree no var Phone kara  Adhik Mahiti sathi TollFree no var Phone kara",
+            "Kutomb subat Time  Daya ",
+             "Doctor la Call / Whatsapp Karna sathi doctor cha  no mi khali no dila ahe  Doctor la Call / Whatsapp Karna sathi doctor no mi khali dila ahe ",
+              "Doctor la Call / Whatsapp Karna sathi doctor cha  no mi khali no dila ahe  Doctor la Call / Whatsapp Karna sathi doctor no mi khali dila ahe ",
+            "MANISH   CHA APP CHA WAPAR KARA Maharashtra SATHI"
+            
+
+            ];  
+            const marathiHealthTips = [
+              "दररोज सकाळी लवकर उठा आणि व्यायाम करा।",
+            "दिवसभर पुरेसे पाणी प्या।",
+            "सकस आणि संतुलित आहार घ्या।",
+            "पुरेशी झोप घ्या, कमीतकमी ८ तास।",
+            "तणाव कमी करण्यासाठी ध्यान करा।",
+            "नियमितपणे आरोग्य तपासणी करा।",
+            "धुम्रपान आणि मद्यपान टाळा।",
+            "आपल्या कुटुंबासोबत वेळ घालवा।",
+            "सकारात्मक विचार ठेवा।",
+            "प्रदूषण टाळण्यासाठी मास्क वापरा।",
+                ];
+            const maharashtraPincodes = {
+                "415521": ["Butiyani Hospital Lonand, Raval Hospital", "Siddhiwinak Hospital, Lonand", "108"],
+                "411001": ["Sassoon General Hospital, Pune", "King Edward Memorial Hospital, Pune", "108"],
+                "41521": ["Gore Memorial Hospital", "Sai Clinic", "Primary Health Center, Malkapur", "108"],
+                "100001": ["AIIMS, Delhi", "Max Hospital, Delhi", "108"],
+                "90210": ["Beverly Hills Medical Center", "Cedars-Sinai Medical Center", "108"],
+                "600001": ["Apollo Hospitals, Chennai", "Fortis Malar Hospital, Chennai", "108"],
+                "415002":["Satara Government Hospital","Shayog Hospital "]
+            };
+
+            // Function to add a message to the chat
+            function addMessage(message, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add(isUser ? 'user-message' : 'bot-message', 'p-3', 'mb-3', 'max-w-3/4');
+                messageDiv.textContent = message;
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            const diseaseData = {
+                "cold": "Rest, drink plenty of fluids, and take over-the-counter medications if needed.",
+                "fever": "Take paracetamol or ibuprofen. Consult a doctor if the fever is high or persists.",
+                "bp": "Check blood pressure regularly and take prescribed medications.",
+                "sugar": "Control diet, exercise regularly, and take prescribed medications.",
+                "cough": "Drink warm water and consult a doctor.",
+                "headache": "Take rest and pain killer ",
+                "diabetes": "Control diet and take prescribed medicine for diabetes and regular check up",
+                "heart disease": "Exercise regularly, eat healthy food, and avoid smoking.",
+                "asthma": "Use your prescribed inhaler and avoid triggers.",
+                "anxiety": "Practice relaxation techniques, seek therapy, or consider medication if prescribed by a doctor.",
+                "depression": "Seek professional help from a therapist or psychiatrist. Medication may be necessary.",
+                "insomnia": "Establish a regular sleep schedule, create a relaxing bedtime routine, and avoid caffeine before sleep.",
+                "allergies": "Avoid known allergens and take antihistamines as needed.",
+                "flu": "Rest, drink plenty of fluids, and take antiviral medications if prescribed by a doctor.",
+                "hypertension": "Follow a low-sodium diet, exercise regularly, and take prescribed blood pressure medications.",
+                "hypothyroidism": "Take prescribed thyroid hormone replacement medication and monitor thyroid levels regularly.",
+                "migraine": "Identify triggers, take prescribed migraine medications, and consider relaxation techniques.",
+                "obesity": "Adopt a healthy diet and exercise regularly. Consult a healthcare provider for guidance.",
+                "osteoarthritis": "Engage in low-impact exercises and take prescribed pain relievers and anti-inflammatory medications.",
+                "osteoporosis": "Take prescribed medications to increase bone density and engage in weight-bearing exercises.",
+                "pneumonia": "Take prescribed antibiotics and get plenty of rest.",
+                "sinusitis": "Use saline nasal sprays and take prescribed decongestants and antibiotics if needed.",
+                "stroke": "Seek immediate medical attention. Rehabilitation is crucial for recovery.",
+                "thyroid disease": "Take prescribed thyroid hormone replacement medication and monitor thyroid levels regularly.",
+                "tuberculosis": "Take prescribed antibiotics for the full duration of treatment as directed by a healthcare professional.",
+                "uti": "Drink plenty of fluids and take prescribed antibiotics.",
+                "varicose veins": "Elevate legs, wear compression stockings, and consider medical procedures for severe cases.",
+                "vision problems": "Consult an eye doctor for diagnosis and treatment options.",
+                "throat pain": "Gargle with warm salt water, drink plenty of fluids, and take over-the-counter pain relievers if needed.",
+                "cancer": "Consult with oncologist",
+                "diarrhea": "Drink water.",
+                "conjunctivitis": "Cold compress, eye drops, antibiotic eye.",
+                "malaria": "Consult to doctor",
+                "pneumonia": "Go to hospital and oxygen provide",
+                "epilepsy": "Avoid accidently",
+                "kidney stones": "drink more and more water and consult to doctor ",
+                "jaundice": "Eat only boiled item",
+                "head injury": "It is necessary that you seek medical assistance.",
+                "burns": "Run the affected area with tap water",
+                "chest pain": "Medical assistance required.",
+                "leg": "Rest the injury and see doctor if persistent",
+                "pain": "describe location and type of pain to see doctor.",
+                "arthritis": "Exercise regularly and prescribed medications and check up frequently.",
+                "cold": "Rest, drink plenty of fluids, and take over-the-counter medications if needed." // Add more keywords here to improve matching
+            };
+
+  function getAiResponse(message) {
+    let response = "I'm sorry, I didn't understand your question. Please try again.";
+    message = message.toLowerCase();
+
+        for (let keyword in diseaseData) {
+        if (message.includes(keyword)) {
+           response = `Here is some information regarding ${keyword}: ${diseaseData[keyword]}`;
+        break;
+              }
+           }
+                return response;
+           }
+
+             findHealthcareBtn.addEventListener('click', () => {
+                const pincode = pincodeInput.value.trim();
+                let resultsHTML = `<p>No hospitals found for pincode ${pincode}.</p>`;
+                if (maharashtraPincodes[pincode]) {
+                    const hospitals = maharashtraPincodes[pincode];
+                    resultsHTML = `<p>Hospitals near pincode ${pincode}:</p><ul>`;
+                    hospitals.forEach(hospital => {
+                          resultsHTML += `<li>${hospital}</li>`;
+                    });
+                    resultsHTML += `</ul>`;
+                }
+                healthcareResults.innerHTML = resultsHTML;
+            });
+            // Emergency ambulance details in Javascript
+        emergencyAmbulanceBtn.addEventListener('click', () => {
+                const pincode = pincodeInput.value.trim();
+                let ambulanceInfo = `Calling Ambulance! No ambulance details found for pincode ${pincode}.`;
+                if (ambulanceDetails[pincode]) {
+                    ambulanceInfo = `Calling Ambulance! Ambulance services in pincode ${pincode}:\n`;
+                    ambulanceDetails[pincode].forEach(service => {
+                        ambulanceInfo += `${service}\n`;
+                    });
+                }
+        function getRandomHealthTip(lang) {
+        let tips;
+               if (lang === 'mr') {
+                tips = marathiHealthTips;
+                   } else {
+            tips = englishHealthTips;
+             }
+              const randomIndex = Math.floor(Math.random() * tips.length);
+               return tips[randomIndex];
+           }
+                alert(ambulanceInfo);
+         });
+
+            // Simulated doctor connection
+      connectDoctorBtn.addEventListener('click', () => {
+           const specialization = prompt("Enter doctor specialization (general, cardiologist, etc.):");
+          let doctorInfo = `Connecting to a doctor! No doctor details found for specialization ${specialization}.`;
+
+            if (doctorDetails[specialization]) {
+          doctorInfo = `Connecting to a doctor!\nAvailable doctors specializing in ${specialization}:\n`;
+             doctorDetails[specialization].forEach(doctor => {
+               doctorInfo += `${doctor}\n`;
+              });
+            }
+        alert(doctorInfo);
+        });
+            // Function to Speak
+            function speak(text, lang = 'en-US') {
+            if (synth.speaking) {
+               console.error('speechSynthesis.speaking');
+               return;
+                }
+          if (text !== '') {
+            const utterThis = new SpeechSynthesisUtterance(text);
+               utterThis.lang = lang;
+               // Find a voice for the specified language
+                 const voice = synth.getVoices().find(voice => voice.lang === lang);
+                   utterThis.voice = voice || synth.getVoices().find(voice => voice.lang === lang);
+                       utterThis.pitch = 1;
+                   utterThis.rate = 1;
+                   synth.speak(utterThis);
+            }
+        }
+        // Function to Get Random Health Tip depending on the language
+           function getRandomHealthTip(lang) {
+               let tips;
+                   if (lang === 'mr') {
+                        tips = marathiHealthTips;
+                           } else {
+                            tips = englishHealthTips;
+                            }
+                           const randomIndex = Math.floor(Math.random() * tips.length);
+                  return tips[randomIndex];
+             }
+             const lang = languageSelector.value;
+                // Function to Get Random Health Tip depending on the language
+           function getRandomHealthTip(lang) {
+                let tips;
+                    if (lang === 'mr') {
+                       tips = marathiHealthTips;
+                      } else {
+                          tips = englishHealthTips;
+                       }
+                      const randomIndex = Math.floor(Math.random() * tips.length);
+                       return tips[randomIndex];
+               }
+            // Store dailyTip in localStorage
+                    function getDailyTip() {
+                        let dailyTip = localStorage.getItem('dailyTip');
+
+                        if (!dailyTip) {
+                           // Store if it doesn't exist
+                           dailyTip = getRandomHealthTip(lang);
+                          localStorage.setItem('dailyTip', dailyTip);
+
+                         }
+                        return dailyTip;
+                    }
+
+        function getDailyTip() {
+           let dailyTip = localStorage.getItem('dailyTip');
+           const lang = languageSelector.value;
+         if (!dailyTip) {
+           dailyTip = getRandomHealthTip(lang);
+            localStorage.setItem('dailyTip', dailyTip);
+        }
+        return dailyTip;
+    }
+        const initialLanguage = languageSelector.value;
+            dailyTip = getRandomHealthTip(initialLanguage);
+          getDailyTip();
+ const aiTips = [
+            "Eat a balanced diet rich in fruits, vegetables, and whole grains.",
+            "Engage in regular physical activity for at least 30 minutes a day.",
+            "Get enough sleep to allow your body to recharge.",
+            "Manage stress through meditation or deep breathing exercises.",
+            "Stay hydrated by drinking plenty of water throughout the day.",
+            "Avoid smoking and excessive alcohol consumption.",
+            "Schedule regular health checkups with your healthcare provider.",
+            "Practice good hygiene by washing your hands frequently.",
+            "Limit screen time to reduce eye strain and promote better sleep.",
+            "Maintain a positive attitude and practice self-care."
+        ];
+
+            aiHealthcareTipsDiv.innerHTML = aiTips.map(tip => `<p>${tip}</p>`).join('');
+        setTimeout(() => {
+           aiHealthcareTipsDiv.innerHTML = aiTips.map(tip => `<p>${tip}</p>`).join('');
+           }, 200);
+
+            // AI Speak button functionality, speaks either the random health tip or a disease's information
+            aiSpeakBtn.addEventListener('click', () => {
+                const message = userInput.value.trim();
+                const selectedLanguage = languageSelector.value;
+            let aiResponse;
+
+              if (message === "") {
+                  aiResponse = getRandomHealthTip(selectedLanguage);
+               } else {
+               aiResponse = getAiResponse(message);
+                }
+
+        speak(aiResponse, selectedLanguage); // Speak the tip/response
+        });
+        // Function to speak the health tip in the selected language
+            voiceBtn.addEventListener('click', () => {
+                 const text = userInput.value.trim();
+               if (text !== '') {
+                  const synth = window.speechSynthesis;
+                 const utterThis = new SpeechSynthesisUtterance(text);
+               utterThis.lang = 'en-US'; // Setting default language
+            synth.speak(utterThis);
+                }
+        });
+
+            sendBtn.addEventListener('click', () => {
+                const message = userInput.value.trim();
+           if (message) {
+               addMessage(message, true);
+            userInput.value = '';
+                 const response = getAiResponse(message);
+                setTimeout(() => addMessage(response), 500); // Simulate delay
+                }
+         });
+
+            userInput.addEventListener('keydown', (event) => {
+              if (event.key === 'Enter') {
+                 sendBtn.click();
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

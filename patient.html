@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Patient Connect System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 15px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #e74c3c;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background: white;
+            font-weight: bold;
+            border-bottom: 1px solid white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .emergency-panel {
+            background-color: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .emergency-btn {
+            background-color: white;
+            color: #e74c3c;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .doctor-list {
+            margin: 15px 0;
+        }
+        .doctor-card {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+        }
+        .doctor-info {
+            flex: 1;
+        }
+        .doctor-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .doctor-specialty {
+            font-size: 14px;
+            color: #666;
+        }
+        .call-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+        .col {
+            flex: 1;
+        }
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        .note {
+            font-size: 13px;
+            color: #777;
+            margin-top: 15px;
+        }
+        .ambulance-panel {
+            background-color: #f39c12;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .hospitals-panel {
+            margin: 15px 0;
+        }
+        .hospital-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .hospital-name {
+            font-weight: bold;
+        }
+        .hospital-address {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+        .hospital-status {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            font-size: 13px;
+        }
+        .status-tag {
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        .beds-available {
+            background-color: #e6f7ee;
+            color: #27ae60;
+        }
+        .oxygen-available {
+            background-color: #e7f5fe;
+            color: #3498db;
+        }
+        .icu-available {
+            background-color: #fef5e7;
+            color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Emergency Patient Connect</h1>
+            <p>Quick access to medical help during emergencies</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('emergency')">Emergency</div>
+            <div class="tab" onclick="switchTab('register')">Register</div>
+            <div class="tab" onclick="switchTab('login')">Login</div>
+        </div>
+        
+        <div id="emergency" class="tab-content active">
+            <div class="emergency-panel">
+                <h2>Medical Emergency?</h2>
+                <p>Get immediate assistance</p>
+                <button class="emergency-btn" onclick="showDoctors()">CONNECT TO DOCTOR NOW</button>
+            </div>
+            
+            <div id="doctorsList" class="doctor-list" style="display: none;">
+                <h3>Available Emergency Doctors</h3>
+                
+                <div class="doctor-card">
+                    <div class="doctor-info">
+                        <div class="doctor-name">Dr. Sarah Johnson</div>
+                        <div class="doctor-specialty">Emergency Medicine</div>
+                        <div>📞 +1-555-123-4567</div>
+                    </div>
+                    <button class="call-btn" onclick="callDoctor('Dr. Sarah Johnson', '+15551234567')">Call Now</button>
+                </div>
+                
+                <div class="doctor-card">
+                    <div class="doctor-info">
+                        <div class="doctor-name">Dr. Michael Chen</div>
+                        <div class="doctor-specialty">Cardiology</div>
+                        <div>📞 +1-555-765-4321</div>
+                    </div>
+                    <button class="call-btn" onclick="callDoctor('Dr. Michael Chen', '+15557654321')">Call Now</button>
+                </div>
+                
+                <div class="doctor-card">
+                    <div class="doctor-info">
+                        <div class="doctor-name">Dr. Robert Williams</div>
+                        <div class="doctor-specialty">Trauma Specialist</div>
+                        <div>📞 +1-555-987-6543</div>
+                    </div>
+                    <button class="call-btn" onclick="callDoctor('Dr. Robert Williams', '+15559876543')">Call Now</button>
+                </div>
+            </div>
+            
+            <div class="ambulance-panel">
+                <h3>Need an Ambulance?</h3>
+                <p>Call emergency services immediately</p>
+                <button class="emergency-btn" onclick="callAmbulance()">CALL AMBULANCE</button>
+            </div>
+            
+            <form id="quickEmergencyForm">
+                <h3>Quick Emergency Form</h3>
+                <p>Fill minimal details to alert hospitals</p>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="name">Your Name*</label>
+                            <input type="text" id="name" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="phone">Phone*</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="condition">Emergency Condition*</label>
+                    <select id="condition" required>
+                        <option value="">Select Condition</option>
+                        <option value="heart">Heart Attack/Chest Pain</option>
+                        <option value="accident">Accident/Trauma</option>
+                        <option value="breathing">Difficulty Breathing</option>
+                        <option value="stroke">Stroke Symptoms</option>
+                        <option value="other">Other Emergency</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Your Location*</label>
+                    <input type="text" id="location" placeholder="Address or use current location" required>
+                    <button type="button" style="width: auto; margin-top: 5px; padding: 5px; font-size: 14px;" onclick="getLocation()">Use My Location</button>
+                </div>
+                
+                <button type="submit" class="submit-btn">SEND TO NEARBY HOSPITALS</button>
+            </form>
+            
+            <div class="hospitals-panel">
+                <h3>Nearby Hospitals</h3>
+                
+                <div class="hospital-card">
+                    <div class="hospital-name">City General Hospital</div>
+                    <div class="hospital-address">123 Medical Dr, City Center</div>
+                    <div class="hospital-status">
+                        <span class="status-tag beds-available">Beds: Available</span>
+                        <span class="status-tag oxygen-available">Oxygen: Available</span>
+                        <span class="status-tag icu-available">ICU: 3 Units</span>
+                    </div>
+                </div>
+                
+                <div class="hospital-card">
+                    <div class="hospital-name">Memorial Medical Center</div>
+                    <div class="hospital-address">456 Health Blvd, Westside</div>
+                    <div class="hospital-status">
+                        <span class="status-tag beds-available">Beds: Limited</span>
+                        <span class="status-tag oxygen-available">Oxygen: Available</span>
+                        <span class="status-tag icu-available">ICU: 1 Unit</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="register" class="tab-content">
+            <h3>Patient Registration</h3>
+            <p>Register to access emergency services faster in the future</p>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regName">Full Name*</label>
+                    <input type="text" id="regName" required>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="regPhone">Phone*</label>
+                            <input type="tel" id="regPhone" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="regEmail">Email*</label>
+                            <input type="email" id="regEmail" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="regAge">Age*</label>
+                            <input type="number" id="regAge" required min="0" max="120">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="regBloodGroup">Blood Group*</label>
+                            <select id="regBloodGroup" required>
+                                <option value="">Select</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regAddress">Address*</label>
+                    <textarea id="regAddress" rows="2" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regMedicalConditions">Existing Medical Conditions</label>
+                    <textarea id="regMedicalConditions" rows="2" placeholder="Diabetes, Hypertension, etc."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPassword">Password*</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">REGISTER</button>
+            </form>
+        </div>
+        
+        <div id="login" class="tab-content">
+            <h3>Patient Login</h3>
+            <p>Log in to access your medical profile</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginPhone">Phone Number*</label>
+                    <input type="tel" id="loginPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password*</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">LOGIN</button>
+                
+                <p class="note">Forgot password? <a href="#">Reset it here</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Switch between tabs
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(function(content) {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to selected tab
+            Array.from(document.querySelectorAll('.tab')).find(tab => tab.textContent.toLowerCase().includes(tabId)).classList.add('active');
+        }
+        
+        // Show available doctors
+        function showDoctors() {
+            document.getElementById('doctorsList').style.display = 'block';
+        }
+        
+        // Call doctor function
+        function callDoctor(name, number) {
+            alert(`Connecting you to ${name} at ${number}...`);
+            // In a real app, this would initiate a phone call
+            window.location.href = `tel:${number}`;
+        }
+        
+        // Call ambulance function
+        function callAmbulance() {
+            alert("Connecting you to emergency services...");
+            // In a real app, this would call emergency number
+            window.location.href = "tel:911";
+        }
+        
+        // Get current location
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('location').value = `Lat: ${position.coords.latitude.toFixed(4)}, Long: ${position.coords.longitude.toFixed(4)}`;
+                    // In a real app, this would be converted to an address
+                    alert("Location detected! Nearby hospitals will be notified.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+        
+        // Quick emergency form submission
+        document.getElementById('quickEmergencyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const condition = document.getElementById('condition').value;
+            alert(`Emergency alert sent for ${name} with ${condition} condition. Nearby hospitals have been notified and will contact you shortly.`);
+            // In a real system, this would send data to hospitals and emergency services
+        });
+        
+        // Register form submission
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Registration successful! You can now log in to access emergency services quickly.");
+        });
+        
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Login successful! You now have quick access to all emergency services.");
+        });
+    </script>
+</body>
+</html>

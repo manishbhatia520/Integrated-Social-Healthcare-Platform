@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambulance Emergency Services | Integrated Healthcare Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .emergency-btn {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #dc3545;
+            color: white;
+            font-size: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(220, 53, 69, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 8px solid #fff;
+        }
+        .emergency-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(220, 53, 69, 0.7);
+        }
+        .emergency-btn i {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .ambulance-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+            background: white;
+        }
+        .ambulance-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-available {
+            width: 10px;
+            height: 10px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .status-busy {
+            width: 10px;
+            height: 10px;
+            background-color: #dc3545;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .status-en-route {
+            width: 10px;
+            height: 10px;
+            background-color: #ffc107;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .quick-action-btn {
+            border-radius: 30px;
+            padding: 12px 20px;
+            font-weight: 600;
+            margin: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .emergency-history-item {
+            padding: 15px;
+            border-left: 4px solid #dc3545;
+            background-color: #f8f9fa;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(220, 53, 69, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+            }
+        }
+        .voice-assist-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .help-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #28a745;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .map-container {
+            height: 300px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            position: relative;
+        }
+        .location-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #dc3545;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-heartbeat me-2"></i>Integrated Healthcare Platform
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="doctor.html">
+                            <i class="fas fa-user-md me-1"></i> Doctor
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="patient.html">
+                            <i class="fas fa-procedures me-1"></i> Patient
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="ambulance.html">
+                            <i class="fas fa-ambulance me-1"></i> Ambulance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="society.html">
+                            <i class="fas fa-users me-1"></i> Society
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="government.html">
+                            <i class="fas fa-landmark me-1"></i> Government
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ai.html">
+                            <i class="fas fa-robot me-1"></i> AI Assistant
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <h1><i class="fas fa-ambulance me-2 text-danger"></i>Emergency Ambulance Services</h1>
+                <p class="lead">Get immediate medical assistance during emergencies</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto text-center">
+                <div class="emergency-btn pulse-animation" onclick="requestEmergency()">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>EMERGENCY</span>
+                </div>
+                <p class="mt-3">Press for immediate ambulance assistance</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12 text-center">
+                <button class="btn btn-danger quick-action-btn" onclick="handleEmergency('accident')">
+                    <i class="fas fa-car-crash me-2"></i>Road Accident
+                </button>
+                <button class="btn btn-danger quick-action-btn" onclick="handleEmergency('heart-attack')">
+                    <i class="fas fa-heartbeat me-2"></i>Heart Attack
+                </button>
+                <button class="btn btn-danger quick-action-btn" onclick="handleEmergency('stroke')">
+                    <i class="fas fa-brain me-2"></i>Stroke
+                </button>
+                <button class="btn btn-danger quick-action-btn" onclick="handleEmergency('other')">
+                    <i class="fas fa-first-aid me-2"></i>Other Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="ambulance-card p-4">
+                    <h3><i class="fas fa-map-marker-alt text-danger me-2"></i>Your Location</h3>
+                    <div class="map-container mb-3">
+                        <i class="fas fa-map-pin location-dot"></i>
+                    </div>
+                    <p id="current-location">Detecting your location...</p>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-outline-primary" onclick="refreshLocation()">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh Location
+                        </button>
+                        <button class="btn btn-outline-success" onclick="shareLocation()">
+                            <i class="fas fa-share-alt me-2"></i>Share Location
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ambulance-card p-4 mt-4">
+                    <h3><i class="fas fa-history text-primary me-2"></i>Recent Emergency Requests</h3>
+                    <div id="emergency-history">
+                        <p class="text-center text-muted">No recent requests found</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="ambulance-card p-4">
+                    <h3><i class="fas fa-ambulance text-danger me-2"></i>Available Ambulances</h3>
+                    <div class="list-group">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="status-available"></span>
+                                City Hospital Ambulance
+                                <div class="text-muted small">Distance: 1.5 km • ETA: 4 minutes</div>
+                            </div>
+                            <button class="btn btn-sm btn-success" onclick="requestSpecificAmbulance('City Hospital')">Request</button>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="status-available"></span>
+                                District Medical Center
+                                <div class="text-muted small">Distance: 2.3 km • ETA: 7 minutes</div>
+                            </div>
+                            <button class="btn btn-sm btn-success" onclick="requestSpecificAmbulance('District Medical')">Request</button>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="status-en-route"></span>
+                                Rural Health Services
+                                <div class="text-muted small">Distance: 3.8 km • ETA: 12 minutes</div>
+                            </div>
+                            <button class="btn btn-sm btn-success" onclick="requestSpecificAmbulance('Rural Health')">Request</button>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="status-busy"></span>
+                                Government Medical College
+                                <div class="text-muted small">Currently busy - Check back later</div>
+                            </div>
+                            <button class="btn btn-sm btn-secondary" disabled>Unavailable</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ambulance-card p-4 mt-4">
+                    <h3><i class="fas fa-info-circle text-primary me-2"></i>Emergency Information</h3>
+                    <div class="accordion" id="emergencyAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    Heart Attack Signs & First Aid
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#emergencyAccordion">
+                                <div class="accordion-body">
+                                    <p><strong>Signs:</strong> Chest pain/pressure, pain in arms/back/neck, shortness of breath, cold sweat, nausea</p>
+                                    <p><strong>First Aid:</strong> Call for ambulance immediately, have person sit or lie down, loosen tight clothing</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    Road Accident Response
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#emergencyAccordion">
+                                <div class="accordion-body">
+                                    <p><strong>Steps:</strong></p>
+                                    <ol>
+                                        <li>Ensure your safety first</li>
+                                        <li>Call for emergency services</li>
+                                        <li>Don't move injured persons unless necessary</li>
+                                        <li>Apply pressure to bleeding wounds</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    Emergency Contact Numbers
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#emergencyAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><strong>National Emergency:</strong> 112</li>
+                                        <li><strong>Ambulance:</strong> 108</li>
+                                        <li><strong>Police:</strong> 100</li>
+                                        <li><strong>Fire:</strong> 101</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Request Modal -->
+    <div class="modal fade" id="emergencyModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Emergency Request
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="emergency-form">
+                        <div class="mb-3">
+                            <label for="emergency-type" class="form-label">Emergency Type</label>
+                            <select class="form-select" id="emergency-type">
+                                <option value="accident">Road Accident</option>
+                                <option value="heart-attack">Heart Attack</option>
+                                <option value="stroke">Stroke</option>
+                                <option value="breathing">Breathing Difficulty</option>
+                                <option value="injury">Severe Injury/Bleeding</option>
+                                <option value="other">Other Emergency</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="victim-count" class="form-label">Number of People Affected</label>
+                            <input type="number" class="form-control" id="victim-count" min="1" value="1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact-number" class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" id="contact-number" placeholder="Enter your phone number">
+                        </div>
+                        <div class="mb-3">
+                            <label for="emergency-details" class="form-label">Emergency Details</label>
+                            <textarea class="form-control" id="emergency-details" rows="3" placeholder="Provide additional details about the emergency"></textarea>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="notify-police" checked>
+                            <label class="form-check-label" for="notify-police">
+                                Also notify police (recommended for accidents)
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="submitEmergencyRequest()">
+                        <i class="fas fa-paper-plane me-2"></i>Send Emergency Request
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>Request Sent Successfully
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-ambulance fa-5x text-danger mb-3"></i>
+                    <h4>Help is on the way!</h4>
+                    <p>Your emergency request has been received.</p>
+                    <div class="alert alert-info">
+                        <p class="mb-0"><strong>Estimated arrival time:</strong> <span id="eta-display">7 minutes</span></p>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 100%"></div>
+                    </div>
+                    <p>Please follow these steps while waiting:</p>
+                    <ol class="text-start">
+                        <li>Stay calm and reassure the injured/sick person</li>
+                        <li>If possible, send someone to the main road to guide the ambulance</li>
+                        <li>Keep your phone accessible for further communication</li>
+                        <li>Do not give food or water to the patient unless advised</li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <a href="tel:108" class="btn btn-outline-danger">
+                        <i class="fas fa-phone me-2"></i>Call Emergency (108)
+                    </a>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Assist Button -->
+    <div class="voice-assist-btn" onclick="startVoiceAssistant()">
+        <i class="fas fa-microphone"></i>
+    </div>
+
+    <!-- Help Button -->
+    <div class="help-btn" onclick="showHelp()">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize localStorage if not already done
+        if (!localStorage.getItem('emergencyHistory')) {
+            localStorage.setItem('emergencyHistory', JSON.stringify([]));
+        }
+
+        // Simulate getting user's location
+        function getCurrentLocation() {
+            // In a real application, you would use the Geolocation API
+            const locationElement = document.getElementById('current-location');
+            
+            if (navigator.geolocation) {
+                locationElement.innerHTML = '<div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div> Getting precise location...';
+                
+                // Simulate a delay in getting location
+                setTimeout(() => {
+                    // This would be the actual location from the Geolocation API
+                    locationElement.textContent = "Lonand [415521]Tal Khandala Dist :Satara";
+                }, 2000);
+            } else {
+                locationElement.textContent = "Geolocation is not supported by your browser. Please enter location manually.";
+            }
+        }
+
+        function refreshLocation() {
+            getCurrentLocation();
+        }
+
+        function shareLocation() {
+            const location = document.getElementById('current-location').textContent;
+            
+            // Create a temporary input element
+            const tempInput = document.createElement('input');
+            tempInput.value = "My emergency location: " + location;
+            document.body.appendChild(tempInput);
+            
+            // Select the text
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+            
+            // Copy to clipboard
+            document.execCommand('copy');
+            
+            // Remove the temporary element
+            document.body.removeChild(tempInput);
+            
+            alert("Location copied to clipboard. You can paste it in any messaging app to share.");
+        }
+
+        function requestEmergency() {
+            const emergencyModal = new bootstrap.Modal(document.getElementById('emergencyModal'));
+            emergencyModal.show();
+        }
+
+        function handleEmergency(type) {
+            document.getElementById('emergency-type').value = type;
+            const emergencyModal = new bootstrap.Modal(document.getElementById('emergencyModal'));
+            emergencyModal.show();
+        }
+
+        function requestSpecificAmbulance(hospitalName) {
+            // In a real application, this would send the request to the specific ambulance service
+            const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            
+            // Set ETA based on hospital
+            let eta = "7 minutes";
+            if (hospitalName === "City Hospital") {
+                eta = "4 minutes";
+            } else if (hospitalName === "District Medical") {
+                eta = "7 minutes";
+            } else if (hospitalName === "Rural Health") {
+                eta = "12 minutes";
+            }
+            
+            document.getElementById('eta-display').textContent = eta;
+            
+            // Add to emergency history
+            const emergencyHistory = JSON.parse(localStorage.getItem('emergencyHistory'));
+            const newEmergency = {
+                type: "Ambulance Request - " + hospitalName,
+                timestamp: new Date().toISOString(),
+                details: "Requested ambulance from " + hospitalName,
+                status: "In Progress"
+            };
+            
+            emergencyHistory.unshift(newEmergency);
+            localStorage.setItem('emergencyHistory', JSON.stringify(emergencyHistory));
+            
+            confirmationModal.show();
+            updateEmergencyHistory();
+        }
+
+        function submitEmergencyRequest() {
+            const emergencyType = document.getElementById('emergency-type').value;
+            const victimCount = document.getElementById('victim-count').value;
+            const contactNumber = document.getElementById('contact-number').value;
+            const emergencyDetails = document.getElementById('emergency-details').value;
+            const notifyPolice = document.getElementById('notify-police').checked;
+            
+            // Validate the form
+            if (!contactNumber) {
+                alert("Please provide a contact number for emergency coordination.");
+                return;
+            }
+            
+            // Get emergency type label
+            const emergencyTypeLabel = document.querySelector(`#emergency-type option[value="${emergencyType}"]`).textContent;
+            
+            // Add to emergency history
+            const emergencyHistory = JSON.parse(localStorage.getItem('emergencyHistory'));
+            const newEmergency = {
+                type: emergencyTypeLabel,
+                timestamp: new Date().toISOString(),
+                details: emergencyDetails || `Emergency for ${victimCount} person(s). Contact: ${contactNumber}`,
+                notifyPolice: notifyPolice,
+                status: "In Progress"
+            };
+            
+            emergencyHistory.unshift(newEmergency);
+            localStorage.setItem('emergencyHistory', JSON.stringify(emergencyHistory));
+            
+            // Close the emergency modal
+            const emergencyModal = bootstrap.Modal.getInstance(document.getElementById('emergencyModal'));
+            emergencyModal.hide();
+            
+            // Show confirmation
+            const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            document.getElementById('eta-display').textContent = "7 minutes";
+            confirmationModal.show();
+            
+            updateEmergencyHistory();
+        }
+
+        function updateEmergencyHistory() {
+            const historyContainer = document.getElementById('emergency-history');
+            const emergencyHistory = JSON.parse(localStorage.getItem('emergencyHistory')) || [];
+            
+            if (emergencyHistory.length === 0) {
+                historyContainer.innerHTML = '<p class="text-center text-muted">No recent requests found</p>';
+                return;
+            }
+            
+            historyContainer.innerHTML = '';
+            
+            // Display only the last 3 emergency requests
+            emergencyHistory.slice(0, 3).forEach(emergency => {
+                const date = new Date(emergency.timestamp);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                
+                const emergencyItem = document.createElement('div');
+                emergencyItem.className = 'emergency-history-item';
+                emergencyItem.innerHTML = `
+                    <h5>${emergency.type}</h5>
+                    <p>${emergency.details}</p>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">${formattedDate}</small>
+                        <span class="badge bg-warning">${emergency.status}</span>
+                    </div>
+                `;
+                
+                historyContainer.appendChild(emergencyItem);
+            });
+        }
+
+        function startVoiceAssistant() {
+            alert("Voice assistant activated. Please speak clearly what emergency you're facing.");
+            // In a real application, this would activate the speech recognition API
+        }
+
+        function showHelp() {
+            alert("Emergency Help Guide:\n\n1. Press the large red EMERGENCY button for immediate assistance\n2. Use quick action buttons for specific emergencies\n3. Make sure your location is accurate\n4. Stay on this page until help arrives");
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            getCurrentLocation();
+            updateEmergencyHistory();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Social Healthcare Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-size: 18px;
+        }
+        .module-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .module-card {
+            width: 300px;
+            text-align: center;
+            padding: 25px;
+            background: white;
+            border-radius: 15 px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .module-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .module-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        .voice-guide {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 24px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .whatsapp-btn:hover {
+            background-color: #1ebe57;
+        }
+        .tollfree-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 24px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .tollfree-btn:hover {
+            background-color: #0056b3;
+        }
+        .chatbot-btn {
+            position: fixed;
+            bottom: 160px;
+            right: 20px;
+            background-color: #ff5722;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 24px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .chatbot-btn:hover {
+            background-color: #e64a19;
+        }
+        /* Style for the small image in the top-right corner */
+        .corner-image {
+            position: absolute;
+            top: 50px;
+
+            right: 5%;
+            width: 160px; /* Adjust the size as needed */
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            /* margin-right: 20px; */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Integrated Social Healthcare Platform</a>
+        </div>
+    </nav>
+    
+    <!-- Small image in the top-right corner -->
+    <!-- <img src="C:\Users\manis\Downloads\Rajgad.jpg" alt="Rajgad Image" class="corner-image"> -->
+    <img src="https://res.cloudinary.com/dqpxfmrs0/image/upload/v1742735479/crek8qh9gnrznjbop9cg.jpg" alt="Rajgad Image" class="corner-image">
+
+    <div class="container mt-4 text-center">
+        <h1>Integrated Social Healthcare Platform</h1>
+        <p>Bringing Society, accessible, and beneficial healthcare services for everyone in India.</p>
+        <div class="voice-guide">
+            <button class="btn btn-warning" onclick="speakAI()">🔊 Click for AI Voice Guidance</button>
+        </div>
+    </div>
+    
+    <div class="module-container">
+        <!-- Doctor Module -->
+        <div class="module-card" onclick="window.location.href='doctor.html'">
+            <div class="module-icon">🩺</div>
+            <h5>Doctor</h5>
+            <p>Find & consult doctors.</p>
+        </div>
+
+        <!-- Patient Module -->
+        <div class="module-card" onclick="window.location.href='patient.html'">
+            <div class="module-icon">👤</div>
+            <h5>Patient</h5>
+            <p>Manage health records.</p>
+        </div>
+
+        <!-- Ambulance Module -->
+        <div class="module-card" onclick="window.location.href='ambulance.html'">
+            <div class="module-icon">🚑</div>
+            <h5>Ambulance</h5>
+            <p>Emergency services.</p>
+        </div>
+
+        <!-- Society Module -->
+        <div class="module-card" onclick="window.location.href='society.html'">
+            <div class="module-icon">🏠</div>
+            <h5>Society</h5>
+            <p>Community health support.</p>
+        </div>
+
+        <!-- Government Module -->
+        <div class="module-card" onclick="window.location.href='government.html'">
+            <div class="module-icon">🏛</div>
+            <h5>Government Schemes</h5>
+            <p>Claim free benefits.</p>
+        </div>
+
+        <!-- AI Module -->
+        <div class="module-card" onclick="window.location.href='ai.html'">
+            <div class="module-icon">🤖</div>
+            <h5>AI Module</h5>
+            <p>AI-driven healthcare.</p>
+        </div>
+    </div>
+    
+    <!-- Floating Buttons -->
+    <a href="https://api.whatsapp.com/send/?phone=919209949457&text=%E0%A4%B5%E0%A4%BF%E0%A4%B5%E0%A4%BF%E0%A4%A7+%E0%A4%AF%E0%A5%8B%E0%A4%9C%E0%A4%A8%E0%A4%BE%E0%A4%82%E0%A4%9A%E0%A5%80+%E0%A4%AE%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%A4%E0%A5%80+%E0%A4%AE%E0%A4%BF%E0%A4%B3%E0%A4%B5%E0%A4%BF%E0%A4%A3%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%B8%E0%A4%BE%E0%A4%A0%E0%A5%80+%E0%A4%86%E0%A4%AE%E0%A4%9A%E0%A4%BE+9209949457+%E0%A4%B9%E0%A4%BE+%E0%A4%A8%E0%A4%82%E0%A4%AC%E0%A4%B0+%E0%A4%B8%E0%A5%87%E0%A4%B5%E0%A5%8D%E0%A4%B9+%E0%A4%95%E0%A4%B0%E0%A4%BE.+%E0%A4%9C%E0%A4%B0+%E0%A4%86%E0%A4%AE%E0%A4%9A%E0%A4%BE+%E0%A4%A8%E0%A4%82%E0%A4%AC%E0%A4%B0+%E0%A4%A4%E0%A5%81%E0%A4%AE%E0%A4%9A%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%95%E0%A4%A1%E0%A5%87+%E0%A4%B8%E0%A5%87%E0%A4%B5%E0%A5%8D%E0%A4%B9+%E0%A4%A8%E0%A4%B8%E0%A5%87%E0%A4%B2+%E0%A4%A4%E0%A4%B0+%E0%A4%86%E0%A4%AE%E0%A5%8D%E0%A4%B9%E0%A5%80+%E0%A4%A4%E0%A5%81%E0%A4%AE%E0%A5%8D%E0%A4%B9%E0%A4%BE%E0%A4%B2%E0%A4%BE+%E0%A4%AA%E0%A4%BE%E0%A4%A0%E0%A4%B5%E0%A4%BF%E0%A4%B2%E0%A5%87%E0%A4%B2%E0%A5%80+%E0%A4%AE%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%A4%E0%A5%80+%E0%A4%A6%E0%A4%BF%E0%A4%B8%E0%A4%A3%E0%A4%BE%E0%A4%B0%E0%A4%9A+%E0%A4%A8%E0%A4%BE%E0%A4%B9%E0%A5%80.+%E0%A4%A4%E0%A5%8D%E0%A4%AF%E0%A4%BE%E0%A4%AE%E0%A5%81%E0%A4%B3%E0%A5%87+%E0%A4%AE%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%A4%E0%A5%80+%E0%A4%B9%E0%A4%B5%E0%A5%80+%E0%A4%85%E0%A4%B8%E0%A5%87%E0%A4%B2+%E0%A4%A4%E0%A4%B0+%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE+%E0%A4%A8%E0%A4%82%E0%A4%AC%E0%A4%B0+%E0%A4%B8%E0%A5%87%E0%A4%B5%E0%A5%8D%E0%A4%B9+%E0%A4%95%E0%A4%B0%E0%A4%BE.&type=phone_number&app_absent=0" class="whatsapp-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <div class="tollfree-btn" onclick="window.location.href='tel:18001234567'">
+        <i class="fas fa-phone"></i>
+    </div>
+    <div class="chatbot-btn" onclick="openChatbot()">
+        <i class="fas fa-robot"></i>
+    </div>
+    
+    <script>
+    // Function for AI voice guidance
+    function speakAI() {
+        if ('speechSynthesis' in window) {
+            // Create a new SpeechSynthesisUtterance object
+            let msg = new SpeechSynthesisUtterance("Namaskar ha Platform  Manish chi Team College cha naav  Raaj   gaad Dnn yan   peeth technical Campus  College Of Enginnering  Bhor Pune Computer cha vidhyarthani   ni banavla  banawala ahe. aya Platform Madhe aapn 6 Integrated kele ahet  Doctor, Patient, ambulance,society,Sarkari Yojna  Maharashtra chi. Toll Free No pann Dila ahe  ahe Phone  Kara ani lavkar  mahiti gya tumcha Gavachi ani jillaha chi  Sarkari yojna chi  Tumchasathi  Ha Platform ahe  .");
+
+            // Get available voices
+            let voices = speechSynthesis.getVoices();
+
+            // Find a female voice (preferably Marathi or English)
+            let femaleVoice = voices.find(voice => voice.lang === "mr-IN" || voice.lang === "en-US" || voice.lang.includes("en"));
+
+            // Set the voice and language
+            if (femaleVoice) {
+                msg.voice = femaleVoice;
+                msg.lang = femaleVoice.lang; // Set the language of the voice
+            } else {
+                msg.lang = "mr-IN"; // Fallback to Marathi if no female voice is found
+            }
+
+            // Adjust speech speed (0.5 is very slow)
+            msg.rate = 1.1; // Decrease this value to make the speech slower
+
+            // Adjust pitch (optional)
+            msg.pitch = 1.1; // 1 is the default pitch
+
+            // Speak the message
+            speechSynthesis.speak(msg);
+        } else {
+            alert("Your browser does not support speech synthesis.");
+        }
+    }
+     
+    // Call the function to test
+    speakAI();
+</script>
+    <footer class="bg-primary text-white text-center py-3 mt-5">
+        <p>Developed by Manish Anil  Bhatia Team</p>
+        <p>College Name :Rajgad Dnyanpeeth Technical Campus College of Engineering
+            Dhangwadi Tal:Bhor District :Pune 
+    </footer>
+</body>
+</html>
